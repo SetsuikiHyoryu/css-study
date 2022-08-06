@@ -1,0 +1,139 @@
+<!--
+【CSS】骨架屏效果
+https://www.bilibili.com/video/BV1Z5411J72V
+
+Skeleton, 网页加载动画
+-->
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dcoument</title>
+  </head>
+
+  <body>
+    <script type="module">
+      import { createApp } from "https://unpkg.com/petite-vue?module";
+    </script>
+
+    <div id="app">
+      <div class="card">
+        <div class="image">
+          <img
+            src="https://assets.codepen.io/2002878/wake-up-and-code.jpg"
+            alt="image"
+          />
+        </div>
+
+        <div class="content">
+          <h4>CodingStartup</h4>
+
+          <div class="description">
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ex
+            quasienim facere commodi omnis...
+          </div>
+        </div>
+      </div>
+
+      <div class="card loading">
+        <div class="image"></div>
+
+        <div class="content">
+          <h4></h4>
+          <div class="description"></div>
+        </div>
+      </div>
+    </div>
+
+    <style>
+      :root {
+        --loading-grey: #ededed;
+      }
+
+      body {
+        background: #888;
+      }
+
+      #app {
+        align-items: center;
+        display: flex;
+        font-family: Helvetica;
+        font-size: 14px;
+        justify-content: space-evenly;
+        min-height: 100vh;
+      }
+
+      .card {
+        background: #fff;
+        border-radius: 6px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.12);
+        overflow: hidden;
+        width: 320px;
+      }
+
+      .image {
+        height: 200px;
+      }
+
+      .image img {
+        display: block;
+        height: inherit;
+        object-fit: cover;
+        width: 100%;
+      }
+
+      .content {
+        padding: 2rem 1.28rem;
+      }
+
+      h4 {
+        margin: 0 0 1rem;
+        font-size: 1.5rem;
+        line-height: 1.5rem;
+      }
+
+      .description {
+        font-size: 1rem;
+        line-height: 1.4rem;
+      }
+
+      .loading .image,
+      .loading h4,
+      .loading .description {
+        animation: 1s loading ease-in-out infinite;
+
+        background: linear-gradient(
+            100deg,
+            rgba(255, 255, 255, 0) 40%,
+            rgba(255, 255, 255, 0.5) 50%,
+            rgba(255, 255, 255, 0) 60%
+          )
+          var(--loading-grey);
+
+        background-color: var(--loading-grey);
+        background-position-x: 180%;
+        background-size: 200% 100%;
+      }
+
+      @keyframes loading {
+        to {
+          background-position-x: -20%;
+        }
+      }
+
+      .loading h4 {
+        animation-delay: 0.05s;
+        border-radius: 4px;
+        min-height: 1.6rem;
+      }
+
+      .loading .description {
+        animation-delay: 0.06s;
+        border-radius: 4px;
+        min-height: 4rem;
+      }
+    </style>
+  </body>
+</html>
