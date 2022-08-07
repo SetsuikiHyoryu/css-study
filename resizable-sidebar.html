@@ -1,0 +1,156 @@
+<!-- 
+  [JS] 实现可调侧栏
+  https://www.bilibili.com/video/BV1L54y197vj
+ -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ResizableSidebar</title>
+  </head>
+
+  <body>
+    <script type="module">
+      import { createApp } from 'https://unpkg.com/petite-vue?module'
+
+      const SCALABLE_WIDTH = 'scalable_width'
+
+      function getScalableWidth(node) {
+        if (!node) {
+          return 0
+        }
+
+        const stringWidth = window.getComputedStyle(node).width
+        return parseInt(stringWidth, 10)
+      }
+
+      createApp({
+        startX: null,
+        startWidth: null,
+        startNode: null,
+        scalableNode: null,
+        newWidth: null,
+
+        scalableMounted(element) {
+          this.scalableNode = element
+        },
+
+        setScalableCurrentWidth(element) {
+          element.style.width = this.newWidth
+            ? `${this.newWidth}px`
+            : localStorage.getItem(SCALABLE_WIDTH) + 'px'
+        },
+
+        startDrag(event, element) {
+          this.startX = event.clientX
+          this.startWidth = getScalableWidth(this.scalableNode)
+
+          this.startNode = element.parentNode.parentNode
+          this.startNode.addEventListener('mousemove', this.handleDrag)
+          this.startNode.addEventListener('mouseup', this.stopDrag)
+        },
+
+        handleDrag(event) {
+          this.newWidth = this.startWidth + event.clientX - this.startX
+        },
+
+        stopDrag(event) {
+          localStorage.setItem(
+            SCALABLE_WIDTH,
+            getScalableWidth(this.scalableNode)
+          )
+
+          this.startNode.removeEventListener('mousemove', this.handleDrag)
+          this.startNode.removeEventListener('mouseup', this.stopDrag)
+        },
+      }).mount('#app')
+    </script>
+
+    <div id="app">
+      <div
+        class="scalable"
+        @vue:mounted="scalableMounted($el)"
+        v-effect="setScalableCurrentWidth($el)"
+      >
+        <div class="content">
+          <img
+            src="https://avatars.githubusercontent.com/u/57035251?v=4"
+            alt="icon"
+          />
+        </div>
+
+        <div class="separator" @mousedown="startDrag($event, $el)">
+          <i></i><i></i>
+        </div>
+      </div>
+
+      <div class="main">
+        <div class="content">國際悲歌歌一曲，狂飇爲我從天落！</div>
+      </div>
+    </div>
+
+    <style>
+      body {
+        margin: 0;
+        user-select: none;
+        -webkit-user-select: none;
+      }
+
+      #app {
+        background: #888;
+        display: flex;
+        min-height: 100vh;
+        min-width: 100vw;
+      }
+
+      .scalable {
+        background: #eee;
+        position: relative;
+        min-width: 100px;
+      }
+
+      .scalable .content {
+        padding: 34px;
+      }
+
+      .scalable .content img {
+        display: block;
+        margin: auto;
+        max-width: 100%;
+      }
+
+      .scalable .separator {
+        align-items: center;
+        background: #fff;
+        box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.35);
+        cursor: ew-resize;
+        display: flex;
+        height: 100%;
+        justify-content: center;
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 14px;
+      }
+
+      .scalable .separator i {
+        background: #e9e9e9;
+        display: inline-block;
+        height: 14px;
+        margin: 0 1px;
+        width: 1px;
+      }
+
+      .main {
+        background: #fdfdfd;
+        flex: 1;
+      }
+
+      .main .content {
+        padding: 20px;
+      }
+    </style>
+  </body>
+</html>
